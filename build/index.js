@@ -1,19 +1,11 @@
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.publish = void 0;
-var kafka_node_1 = require("kafka-node");
-var kafkaHost = "localhost:9092";
-exports.publish = function (topic, message) {
-    //The client connects to Kafka
-    var client = new kafka_node_1.KafkaClient({ kafkaHost: kafkaHost });
-    //The producer writes to a topic
-    var producer = new kafka_node_1.Producer(client);
-    //Initiate the producer
-    producer.on("ready", function () {
-        client.refreshMetadata([topic], function (err) {
-            if (err) {
-                throw err;
-            }
-        });
-    });
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
 };
+Object.defineProperty(exports, "__esModule", { value: true });
+var express_1 = __importDefault(require("express"));
+var PORT = Number(process.env.PORT) || 80;
+var app = express_1.default();
+app.listen(PORT, function () {
+    console.log("server listening on port " + PORT);
+});
