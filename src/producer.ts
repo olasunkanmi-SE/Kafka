@@ -1,28 +1,30 @@
-import { KafkaClient as Client, Producer, ProduceRequest } from "kafka-node";
+import { Producer, ProduceRequest } from "kafka-node";
+import { client } from "./clients";
 
-const kafkaHost: string = "localhost:9092";
+export class Publish {
+  constructor(public topic: string, public message: string) {}
 
-export const publish = (topic: string, message: string): void => {
-  //The client connects to Kafka
-  const client = new Client({ kafkaHost });
-  //The producer writes to a topic
-  const producer = new Producer(client);
-  //Initiate the producer
-  producer.on("ready", (): void => {
-    client.refreshMetadata([topic], (err: Error): void => {
-      if (err) {
-        throw err;
-      }
+  publish(): void {
+    //The producer writes to a topic
+    const producer = new Producer(client);
+    //Initiate the producer
+    producer.on("ready", (): void => {
+      client.refreshMetadata([this.topic], (err: Error): void => {
+        if (err) {
+          throw err;
+        }
 
-      console.log(`Sending message to topic ${topic}: ${message}`);
-      producer.send([{ topic, messages: [message] }], (err: Error, result: ProduceRequest): void => {
-        console.log(err || result);
-        process.exit();
+        console.log(`Sending message to topic ${this.topic}: ${this.message}`);
+        let payload: ProduceRequest = { topic: this.topic, messages: [this.message] };
+        producer.send([payload], (err: Error, result: ProduceRequest): void => {
+          console.log(err || result);
+          process.exit();
+        });
       });
     });
-  });
 
-  producer.on("error", (err: Error): void => {
-    console.log("error", err);
-  });
-};
+    producer.on("error", (err: Error): void => {
+      console.log("error", err);
+    });
+  }
+}
