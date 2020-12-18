@@ -1,7 +1,7 @@
 import { Producer, ProduceRequest } from "kafka-node";
 import { client } from "./clients";
 
-export class Publish {
+export class Publisher {
   constructor(public topic: string, public message: string) {}
 
   publish(): void {

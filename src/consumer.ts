@@ -9,7 +9,7 @@ import {
 } from "kafka-node";
 import { kafkaHost } from "./clients";
 
-export class Subscribe {
+export class Subscriber {
   constructor(public topic: string) {}
   client: KafkaClient = new KafkaClient(kafkaHost);
   topics: OffsetFetchRequest[] = [{ topic: this.topic, partition: 0 }];
@@ -19,7 +19,7 @@ export class Subscribe {
     fetchMinBytes: 1021 * 1024,
   };
   consumer: Consumer = new Consumer(this.client, this.topics, this.options);
-  async kafkaSubscribe() {
+  async subscribe() {
     await this.consumer.on("error", (err: Error): void => {
       console.log("error", err);
     });
