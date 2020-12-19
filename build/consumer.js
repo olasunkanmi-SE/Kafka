@@ -36,11 +36,11 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Subscribe = void 0;
+exports.Subscriber = void 0;
 var kafka_node_1 = require("kafka-node");
 var clients_1 = require("./clients");
-var Subscribe = /** @class */ (function () {
-    function Subscribe(topic) {
+var Subscriber = /** @class */ (function () {
+    function Subscriber(topic) {
         this.topic = topic;
         this.client = new kafka_node_1.KafkaClient(clients_1.kafkaHost);
         this.topics = [{ topic: this.topic, partition: 0 }];
@@ -51,7 +51,7 @@ var Subscribe = /** @class */ (function () {
         };
         this.consumer = new kafka_node_1.Consumer(this.client, this.topics, this.options);
     }
-    Subscribe.prototype.kafkaSubscribe = function () {
+    Subscriber.prototype.subscribe = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
             return __generator(this, function (_a) {
@@ -74,7 +74,8 @@ var Subscribe = /** @class */ (function () {
                                         if (err) {
                                             return console.log(err);
                                         }
-                                        var min = Math.min.apply(null, offsets[topic.topic][_this.topic.partition]);
+                                        var min = Math.min.apply(null, offsets[topic.topic][topic.partition]);
+                                        _this.consumer.setOffset(topic.topic, topic.partition, min);
                                     });
                                 });
                             })];
@@ -85,6 +86,6 @@ var Subscribe = /** @class */ (function () {
             });
         });
     };
-    return Subscribe;
+    return Subscriber;
 }());
-exports.Subscribe = Subscribe;
+exports.Subscriber = Subscriber;

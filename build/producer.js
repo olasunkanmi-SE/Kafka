@@ -1,14 +1,14 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Publish = void 0;
+exports.Publisher = void 0;
 var kafka_node_1 = require("kafka-node");
 var clients_1 = require("./clients");
-var Publish = /** @class */ (function () {
-    function Publish(topic, message) {
+var Publisher = /** @class */ (function () {
+    function Publisher(topic, message) {
         this.topic = topic;
         this.message = message;
     }
-    Publish.prototype.publish = function () {
+    Publisher.prototype.publish = function () {
         var _this = this;
         //The producer writes to a topic
         var producer = new kafka_node_1.Producer(clients_1.client);
@@ -19,7 +19,10 @@ var Publish = /** @class */ (function () {
                     throw err;
                 }
                 console.log("Sending message to topic " + _this.topic + ": " + _this.message);
-                var payload = { topic: _this.topic, messages: [_this.message] };
+                var payload = {
+                    topic: _this.topic,
+                    messages: [_this.message],
+                };
                 producer.send([payload], function (err, result) {
                     console.log(err || result);
                     process.exit();
@@ -30,6 +33,6 @@ var Publish = /** @class */ (function () {
             console.log("error", err);
         });
     };
-    return Publish;
+    return Publisher;
 }());
-exports.Publish = Publish;
+exports.Publisher = Publisher;
