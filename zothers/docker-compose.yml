@@ -6,10 +6,17 @@ services:
   web:
     build:
       dockerfile: Dockerfile
-      context: ./
-    image: kosemani1/kafka
+      context: ./posts
+    image: kosemani1/post
     ports:
-      - "3000:3000"
+      - "4000:4000"
+  web:
+    build:
+      dockerfile: Dockerfile
+      context: ./comments
+    image: kosemani1/comments
+    ports:
+      - "4002:4002"
 
   zoo1:
     image: zookeeper:3.4.9
@@ -21,9 +28,6 @@ services:
       ZOO_MY_ID: 1
       ZOO_PORT: 2181
       ZOO_SERVERS: server.1=zoo1:2888:3888
-    volumes:
-      - ./full-stack/zoo1/data:/data
-      - ./full-stack/zoo1/datalog:/datalog
 
   kafka1:
     image: confluentinc/cp-kafka:5.2.1
@@ -38,7 +42,5 @@ services:
       KAFKA_BROKER_ID: 1
       KAFKA_LOG4J_LOGGERS: "kafka.controller=INFO,kafka.producer.async.DefaultEventHandler=INFO,state.change.logger=INFO"
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
-    volumes:
-      - ./full-stack/kafka1/data:/var/lib/kafka/data
     depends_on:
       - zoo1
