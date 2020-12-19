@@ -31,15 +31,21 @@ export class Subscriber {
       this.consumer.on("message", (message: Message): void => {
         console.log(message);
       });
-      this.consumer.on("offsetOutOfRange", (topic: OffsetFetchRequest): void => {
-        offset.fetch([topic], (err, offsets): void => {
-          if (err) {
-            return console.log(err);
-          }
-          const min = Math.min.apply(null, offsets[topic.topic][topic.partition!]);
-          this.consumer.setOffset(topic.topic, topic.partition!, min);
-        });
-      });
+      this.consumer.on(
+        "offsetOutOfRange",
+        (topic: OffsetFetchRequest): void => {
+          offset.fetch([topic], (err, offsets): void => {
+            if (err) {
+              return console.log(err);
+            }
+            const min = Math.min.apply(
+              null,
+              offsets[topic.topic][topic.partition!]
+            );
+            this.consumer.setOffset(topic.topic, topic.partition!, min);
+          });
+        }
+      );
     });
   }
 }

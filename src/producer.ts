@@ -15,7 +15,10 @@ export class Publisher {
         }
 
         console.log(`Sending message to topic ${this.topic}: ${this.message}`);
-        let payload: ProduceRequest = { topic: this.topic, messages: [this.message] };
+        let payload: ProduceRequest = {
+          topic: this.topic,
+          messages: [this.message],
+        };
         producer.send([payload], (err: Error, result: ProduceRequest): void => {
           console.log(err || result);
           process.exit();
